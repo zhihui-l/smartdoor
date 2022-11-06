@@ -8,7 +8,7 @@ class Button():
     pin = 0
     cnt = 0
     func = None
-    def __init__(self, pin, func = lambda :None, pull_up_down=GPIO.PUD_UP):
+    def __init__(self, pin, func = lambda a:None, pull_up_down=GPIO.PUD_UP):
         self.pin = pin
         self.func = func
         GPIO.setup(self.pin, GPIO.IN, pull_up_down=pull_up_down)

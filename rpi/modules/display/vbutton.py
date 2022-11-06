@@ -7,11 +7,12 @@ class VButton(Entity):
     text = None
     color = 100,100,100
     shape = 'rect'
-    def __init__(self, text = None, position = [200, 200], size = (100, 100), shape = 'rect', color = (100,100,100), speed = [0,0]):
+    def __init__(self, text = None, position = [200, 200], size = (100, 100), shape = 'rect', color = (100,100,100), speed = [0,0], enable = True):
         self.speed = np.array(speed)
         self.color = color
         self.text = text
         self.shape = shape
+        self.enable = enable
         self.rect = pygame.Rect((position[0]-size[0]/2, position[1]-size[1]/2), size)
         self.refresh()
 
