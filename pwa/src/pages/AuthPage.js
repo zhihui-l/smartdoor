@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Col, Row, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Card, Col, Row, Button, Form, FormGroup, Input, Label, Container } from 'reactstrap';
 
 class AuthForm extends React.Component {
 
@@ -47,6 +47,8 @@ class AuthPage extends React.Component {
 
   render() {
     return (
+      <main className="cr-app bg-light" >
+      <Container fluid>
       <Row
         style={{
           height: '100vh',
@@ -59,6 +61,8 @@ class AuthPage extends React.Component {
           </Card>
         </Col>
       </Row>
+      </Container>
+    </main>
     );
   }
 }
