@@ -1,19 +1,49 @@
-import AuthForm, { STATE_LOGIN } from 'components/AuthForm';
 import React from 'react';
-import { Card, Col, Row } from 'reactstrap';
+import { Card, Col, Row, Button, Form, FormGroup, Input, Label } from 'reactstrap';
+
+class AuthForm extends React.Component {
+
+
+  
+  handleSubmit = event => {
+    event.preventDefault();
+    window.location.href='/';
+  };
+
+
+  render() {
+    const {
+      children,
+    } = this.props;
+
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <FormGroup>
+          <Label for="Username">Username</Label>
+          <Input type="text" />
+        </FormGroup>
+        <FormGroup>
+          <Label for="Password">Password</Label>
+          <Input type="password" />
+        </FormGroup>
+
+        <hr />
+        <Button
+          size="lg"
+          className="bg-gradient-theme-left border-0"
+          block
+          onClick={this.handleSubmit}>
+          Login
+        </Button>
+
+
+        {children}
+      </Form>
+    );
+  }
+}
 
 class AuthPage extends React.Component {
-  handleAuthState = authState => {
-    if (authState === STATE_LOGIN) {
-      this.props.history.push('/login');
-    } else {
-      this.props.history.push('/signup');
-    }
-  };
-
-  handleLogoClick = () => {
-    this.props.history.push('/');
-  };
 
   render() {
     return (
@@ -25,11 +55,7 @@ class AuthPage extends React.Component {
         }}>
         <Col md={6} lg={4}>
           <Card body>
-            <AuthForm
-              authState={this.props.authState}
-              onChangeAuthState={this.handleAuthState}
-              onLogoClick={this.handleLogoClick}
-            />
+            <AuthForm />
           </Card>
         </Col>
       </Row>

@@ -1,18 +1,23 @@
-import { STATE_LOGIN, STATE_SIGNUP } from 'components/AuthForm';
-import GAListener from 'components/GAListener';
-import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout';
-import PageSpinner from 'components/PageSpinner';
-import AuthPage from 'pages/AuthPage';
+import MainLayout  from 'components/MainLayout';
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './styles/reduction.scss';
+import { Spinner } from 'reactstrap';
 
-
-const CardPage = React.lazy(() => import('pages/CardPage'));
+import AuthPage from 'pages/AuthPage';
+const UsersPage = React.lazy(() => import('pages/UsersPage'));
 const DashboardPage = React.lazy(() => import('pages/DashboardPage'));
+const LogPage = React.lazy(() => import('pages/LogPage'));
 
-const TablePage = React.lazy(() => import('pages/TablePage'));
+
+const PageSpinner = ({ color = 'primary' }) => {
+  return (
+    <div className="cr-page-spinner">
+      <Spinner color={color} />
+    </div>
+  );
+};
 
 
 const getBasename = () => {
@@ -23,35 +28,17 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter basename={getBasename()}>
-        <GAListener>
           <Switch>
-            <LayoutRoute
-              exact
-              path="/login"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_LOGIN} />
-              )}
-            />
-            <LayoutRoute
-              exact
-              path="/signup"
-              layout={EmptyLayout}
-              component={props => (
-                <AuthPage {...props} authState={STATE_SIGNUP} />
-              )}
-            />
-
+           <Route exact path="/login" component={AuthPage} />
             <MainLayout breakpoint={this.props.breakpoint}>
               <React.Suspense fallback={<PageSpinner />}>
                 <Route exact path="/" component={DashboardPage} />
-                <Route exact path="/cards" component={CardPage} />
-                <Route exact path="/tables" component={TablePage} />
+                <Route exact path="/users" component={UsersPage} />
+                <Route exact path="/log" component={LogPage} />
               </React.Suspense>
             </MainLayout>
             <Redirect to="/" />
           </Switch>
-        </GAListener>
       </BrowserRouter>
     );
   }
