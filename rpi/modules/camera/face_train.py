@@ -1,4 +1,5 @@
 #Program to train with the faces and create a YAML file
+#Reference: https://robu.in/real-time-face-detection-using-raspberry-pi-connections-and-code/
 
 import cv2 #For Image processing 
 import numpy as np #For converting Images to Numerical array 
