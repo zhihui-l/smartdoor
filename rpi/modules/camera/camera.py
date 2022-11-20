@@ -11,9 +11,9 @@ import os
     
 camera = PiCamera()
 
-# camera.start_preview()
+camera.start_preview()
 # sleep(10)
 for i in range (1,101):
-    camera.capture("img/jerry/" + str(i) + ".jpg")
+    camera.capture("img/jeffery/" + str(i) + ".jpg")
  
-# camera.stop_preview()
+camera.stop_preview()
