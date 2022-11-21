@@ -56,6 +56,7 @@ class AuthPage extends React.Component {
           alignItems: 'center',
         }}>
         <Col md={6} lg={4}>
+        <h5 style={{width:'230%',position:'absolute', top:'-35%', left:'10%', fontSize:'2em'}}>Access Control System</h5>
           <Card body>
             <AuthForm />
           </Card>
