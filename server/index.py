@@ -3,17 +3,28 @@ from flask import Flask, request, jsonify
 import sys
 sys.path.append('modules')
 
-from db import addUser, rmUser, getUser
+from db import addUser, rmUser, getUser, saveImageByUser, getImagesByUser
+from camera import Camera
+
+camera = Camera()
+
 
 app = Flask(__name__)
 
+@app.route("/")
+def root():
+    saveImageByUser(1, camera.get())
+    print(len(getImagesByUser(1)))
+    return 'Welcome to SmartDoor API~'
 
 
 @app.route("/api/addUser")
 def api_addUser():
-    addUser(request.args.get('id'))
+    id = addUser(request.args.get('name'), request.args.get('id'))
+
     return jsonify(jsonify({
-        "status": True
+        "status": True,
+        "id": id
     }))
 
 

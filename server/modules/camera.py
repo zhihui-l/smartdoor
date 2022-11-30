@@ -1,16 +1,23 @@
 from picamera import PiCamera
-from time import sleep
-import os
-import hashlib
+from io import BytesIO
+from PIL import Image
 
+class Camera:
+    camera = None
 
-camera = PiCamera()
+    def __init__(self):
+        self.camera = PiCamera()
+        self.camera.start_preview()
 
-camera.start_preview()
-# sleep(10)
-for i in range (1,101):
-    camera.capture("img/jeffery/" + str(i) + ".jpg")
- 
-hashlib.md5("whatever your string is".encode('utf8')).hexdigest()
+    def __del__(self):
+        self.camera.stop_preview()
 
-camera.stop_preview()
+    def get(self):
+        stream = BytesIO()
+        self.camera.capture(stream, format='jpeg')
+        stream.seek(0)
+        image = Image.open(stream)
+        return image
+
+    def save(self, filename):
+        self.get().save(filename)
