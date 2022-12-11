@@ -16,8 +16,6 @@ class Camera:
         stream = BytesIO()
         self.camera.capture(stream, format='jpeg')
         stream.seek(0)
-        image = Image.open(stream)
+        image = Image.open(stream).resize( (800,800) , Image.ANTIALIAS)
         return image
 
-    def save(self, filename):
-        self.get().save(filename)
