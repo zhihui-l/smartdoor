@@ -10,18 +10,16 @@ from imgConvert import *
 # add self modules path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../utilities')
 
-from camera import Camera
 from cv import detect_face, recg_face, label_face, train_face, retrain_face
 
 
 
-def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg):
+def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg, queue_photo_from_camera):
 
     STATE = 'IDLE' # IDLE, RECG, TRAIN
     ID_TRAINING = 8
 
     try:
-        cam = Camera()
 
         while True:
 
@@ -34,7 +32,7 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg)
                     ID_TRAINING = cmd['data']
                     STATE = 'TRAIN'
 
-            img = imgc_pil2cv(cam.get())
+            img = queue_photo_from_camera.get()
             img, faces, faces_position, HAVE_MODEL = detect_face(img)
 
             if HAVE_MODEL and len(faces) == 1:
@@ -65,4 +63,4 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg)
 
 
     except KeyboardInterrupt:
-        del cam
+        pass

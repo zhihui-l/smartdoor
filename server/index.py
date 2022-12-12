@@ -9,12 +9,13 @@ from display import display
 from hub import hub
 from motor import motor
 from face_recg import face_recg
+from camera import camera
 
 from imgConvert import *
 
 import db
 
-queue_photo = mp.Queue()
+queue_photo_from_camera = mp.Queue()
 queue_cmd_from_display = mp.Queue()
 queue_cmd_to_display = mp.Queue()
 queue_cmd_to_motor = mp.Queue()
@@ -37,9 +38,10 @@ f.close()
 
 
 process = {
+    "camera": mp.Process(target=camera, args=(queue_photo_from_camera,)),
     "display": mp.Process(target=display, args=(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo)),
     "motor": mp.Process(target=motor, args=(queue_cmd_to_motor,)),
-    "face_recg": mp.Process(target=face_recg, args=(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg)),
+    "face_recg": mp.Process(target=face_recg, args=(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg, queue_photo_from_camera)),
     "hub": mp.Process(target=hub, args=(
         queue_cmd_to_hub,
         queue_cmd_from_display, 

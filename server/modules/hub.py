@@ -60,7 +60,7 @@ def hub(
             if not queue_cmd_from_face_recg.empty():
                 cmd = queue_cmd_from_face_recg.get()
                 if cmd['type'] == 'FACE OK':
-                    if cmd['confidence'] > 60:
+                    if cmd['confidence'] < 60:
                         user = getUser(cmd['id'])
                         if len(user) == 1:
                             queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
