@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, Response
 import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/modules')
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/utilities')
@@ -12,6 +12,7 @@ from face_recg import face_recg
 from camera import camera
 
 from imgConvert import *
+
 
 import db
 
@@ -118,11 +119,19 @@ def api_openDoor():
       "status": True
     })
 
+def genVideoStream():
+    while True:
+        frame = imgc_base642bytesio(dict_live_photo['png']).getvalue()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route("/api/live")
 def api_live():
     #return imgc_base642url(dict_live_photo['png'])
-    return send_file(imgc_base642bytesio(dict_live_photo['png']), mimetype = 'image/jpg')
+    #return send_file(imgc_base642bytesio(dict_live_photo['png']), mimetype = 'image/jpg')
+    return Response(genVideoStream(),
+        mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 
 @app.route("/api/getLogImg")
