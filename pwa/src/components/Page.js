@@ -12,6 +12,8 @@ const Page = ({
 }) => {
   const classes = 'cr-page px-3 '+className;
 
+
+
   return (
     <Tag className={classes} {...restProps}>
       <div className="cr-page__header">
