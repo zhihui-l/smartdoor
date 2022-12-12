@@ -33,7 +33,8 @@ const sidebarBackground = {
 const navItems = [
   { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },
   { to: '/users', name: 'users', exact: false, Icon: MdWeb },
-  { to: '/log', name: 'log', exact: false, Icon: MdBorderAll }
+  { to: '/log', name: 'log', exact: false, Icon: MdBorderAll },
+  { to: '/admin', name: 'admin', exact: false, Icon: MdBorderAll }
 ];
 
 class Sidebar extends React.Component {

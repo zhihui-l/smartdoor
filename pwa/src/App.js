@@ -6,9 +6,11 @@ import './styles/reduction.scss';
 import { Spinner } from 'reactstrap';
 
 import AuthPage from 'pages/AuthPage';
+import SignUpPage from 'pages/SignUpPage';
 const UsersPage = React.lazy(() => import('pages/UsersPage'));
 const DashboardPage = React.lazy(() => import('pages/DashboardPage'));
 const LogPage = React.lazy(() => import('pages/LogPage'));
+const AdminPage = React.lazy(() => import('pages/AdminPage'));
 
 
 const PageSpinner = ({ color = 'primary' }) => {
@@ -30,11 +32,13 @@ class App extends React.Component {
       <BrowserRouter basename={getBasename()}>
           <Switch>
            <Route exact path="/login" component={AuthPage} />
+           <Route exact path="/sign-up" component={SignUpPage} />
             <MainLayout breakpoint={this.props.breakpoint}>
               <React.Suspense fallback={<PageSpinner />}>
                 <Route exact path="/" component={DashboardPage} />
                 <Route exact path="/users" component={UsersPage} />
                 <Route exact path="/log" component={LogPage} />
+                <Route exact path="/admin" component={AdminPage} />
               </React.Suspense>
             </MainLayout>
             <Redirect to="/" />
