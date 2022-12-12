@@ -132,7 +132,7 @@ export default function AdminForm() {
                     size="lg"
                     className="bg-gradient-theme-left border-0"
                     block
-                    onClick={handleSubmit}>
+                    onClick={handleSuçbmit}>
                     Submit
                     </Button>
                 </Form>
