@@ -11,7 +11,7 @@ class AuthForm extends React.Component {
     event.preventDefault();
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
-    if (username === 'kevin') {
+    if (username === 'admin') {
       if (md5(password) === 'e10adc3949ba59abbe56e057f20f883e'){
         localStorage.setItem('login', 'true');
         window.location.href='/';
