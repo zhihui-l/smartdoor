@@ -50,11 +50,11 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg)
                     queue_cmd_from_face_recg.put({
                         "type": 'FACE OK',
                         "id": id,
-                        "confidence": confidence,
-                        "photo": dict_live_photo.copy()
+                        "confidence": confidence
                     })
 
             if len(faces) == 1:
+                dict_live_photo['good'] =dict_live_photo['png']
                 if STATE == 'TRAIN':
                     train_face(ID_TRAINING, faces[0])
                     queue_cmd_from_face_recg.put({

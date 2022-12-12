@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import sys, os
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/modules')
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/utilities')
@@ -24,6 +24,16 @@ queue_cmd_to_hub = mp.Queue()
 
 dict_live_photo = (mp.Manager()).dict()
 dict_live_photo['png'] = ''
+dict_live_photo['good'] = ''
+f = open('/var/EMAIL')
+data = f.read()
+dict_live_photo['email'] = data
+f.close()
+f = open('/var/SMS')
+data = f.read()
+dict_live_photo['sms'] = data
+f.close()
+
 
 
 process = {
@@ -47,10 +57,6 @@ print('play')
 
 app = Flask(__name__)
 print('displayyyy')
-
-@app.route("/")
-def root():
-    return 'Welcome to SmartDoor API~'
 
 
 @app.route("/api/addUser")
@@ -112,8 +118,39 @@ def api_openDoor():
 
 @app.route("/api/live")
 def api_live():
-    return imgc_base642url(dict_live_photo['png'])
+    #return imgc_base642url(dict_live_photo['png'])
+    return send_file(imgc_base642bytesio(dict_live_photo['png']), mimetype = 'image/jpg')
 
+
+@app.route("/api/getLogImg")
+def api_getLogImg():
+    id = request.args.get('id')
+    img = db.getLogImg(id)[0][0]
+    #return imgc_base642url(img)
+    return send_file(imgc_base642bytesio(img), mimetype = 'image/jpg')
+
+
+@app.route("/api/getInfo")
+def api_getInfo():
+    return jsonify({
+      "email": dict_live_photo['email'],
+      "telephone": dict_live_photo['sms']
+    })
+
+
+@app.route("/api/setInfo")
+def api_setInfo():
+    dict_live_photo['email'] = request.args.get('email')
+    dict_live_photo['sms'] = request.args.get('telephone')
+    f = open('/var/EMAIL','w')
+    f.write(dict_live_photo['email'])
+    f.close()
+    f = open('/var/SMS','w')
+    f.write(dict_live_photo['sms'])
+    f.close()
+    return jsonify({
+      "status": True
+    })
 
 app.run(host="0.0.0.0")
 

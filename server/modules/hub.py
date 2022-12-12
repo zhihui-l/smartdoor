@@ -2,11 +2,12 @@ from time import time
 from threading import Timer
 import os
 import sys
+import requests
 
 # add self modules path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../utilities')
 
-from db import log, getUser
+from db import log, getUser, addUserIteration
 
 def hub(
     queue_cmd_to_hub,
@@ -47,25 +48,34 @@ def hub(
         cmd = queue_cmd_from_display.get()
         queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
         if cmd['type'] == 'TRAIN FINISH':
-            log('TRAIN', uid = id, img = dict_live_photo['png'])
+            log('TRAIN', uid = id, img = dict_live_photo['good'])
         
 
     def recg():
         queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'RECG'})
         start_time = time()
-        while time() < start_time + 10:
+        while time() < start_time + 15:
             if not queue_cmd_from_face_recg.empty():
                 cmd = queue_cmd_from_face_recg.get()
                 if cmd['type'] == 'FACE OK':
-                    if cmd['confidence'] > 30:
-                        queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
-                        openDoor('Welcome %s ~~' % getUser(cmd['id'])[0][0])
-                        log('RECG_SUCCESS', uid = cmd['id'], img = cmd['photo']['png'])
-                        return None
+                    if cmd['confidence'] > 60:
+                        user = getUser(cmd['id'])
+                        if len(user) == 1:
+                            queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
+                            openDoor('Welcome %s ~~' % user[0][0])
+                            log('RECG_SUCCESS', uid = cmd['id'], img = dict_live_photo['good'])
+                            return None
+
 
         queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
         recgFail('Cannot recg you!!')
         log('RECG_FAILURE', img = dict_live_photo['png'])
+
+
+    def request():
+        requests.get(url = 'https://api.yimian.xyz/mail/?subject=Access_Control_Request&body=Log_on_web_dashboard_to_decide!!&from=access_control&to='+dict_live_photo['email'])
+        requests.get(url = 'https://api.yimian.xyz/mail/?subject=Access_Control_Request&body=Log_on_web_dashboard_to_decide!!&from=access_control&to='+dict_live_photo['sms']+'@vzwpix.com')
+        log('REQUEST', img = dict_live_photo['png'])
 
     """init"""
     queue_cmd_to_display.put({
@@ -94,6 +104,14 @@ def hub(
                 print('queue_cmd_from_display: ', cmd)
                 if cmd['type'] == 'START RECOG':
                     recg()
-    
+                if cmd['type'] == 'REQUEST':
+                    request()
+
+
+            if not queue_cmd_from_face_recg.empty():
+                cmd = queue_cmd_from_face_recg.get()
+                if cmd['type'] == 'FACE TRAINED':
+                    addUserIteration(cmd['id'])
+
     except KeyboardInterrupt:
         pass

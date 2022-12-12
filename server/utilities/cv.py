@@ -1,13 +1,13 @@
 import cv2
 import numpy as np 
-import os 
+import os
 from PIL import Image 
 
 
 face_cascade = cv2.CascadeClassifier(os.path.dirname(os.path.realpath(__file__)) + '/../lib/haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 print(os.path.dirname(os.path.realpath(__file__)) + '/../lib/haarcascade_frontalface_default.xml')
-MODEL_DIR = '/tmp/SMARTDOOR_MODEL.yml'
+MODEL_DIR = '/var/SMARTDOOR_MODEL.yml'
 
 HAVE_MODEL = False
 

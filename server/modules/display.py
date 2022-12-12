@@ -182,7 +182,11 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
                         })
 
                     if (button_request.collidepoint(pos)):
-                        banner.text = 'No internet connection!!'
+                        button_request.enable = False
+                        queue_cmd_from_display.put({
+                            "type": 'REQUEST'
+                        })
+                        banner.text = 'Request sent!!'
                         banner.refresh()
 
                     if (button_finish.collidepoint(pos)):
