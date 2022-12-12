@@ -9,7 +9,7 @@ import AuthPage from 'pages/AuthPage';
 const UsersPage = React.lazy(() => import('pages/UsersPage'));
 const DashboardPage = React.lazy(() => import('pages/DashboardPage'));
 const LogPage = React.lazy(() => import('pages/LogPage'));
-
+const AdminPage = React.lazy(() => import('pages/AdminPage'));
 
 const PageSpinner = ({ color = 'primary' }) => {
   return (
@@ -35,6 +35,7 @@ class App extends React.Component {
                 <Route exact path="/" component={DashboardPage} />
                 <Route exact path="/users" component={UsersPage} />
                 <Route exact path="/log" component={LogPage} />
+                <Route exact path="/admin" component={AdminPage} />
               </React.Suspense>
             </MainLayout>
             <Redirect to="/" />

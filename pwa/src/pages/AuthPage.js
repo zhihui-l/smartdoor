@@ -1,13 +1,28 @@
 import React from 'react';
 import { Card, Col, Row, Button, Form, FormGroup, Input, Label, Container } from 'reactstrap';
 
+const md5 = require('md5');
+
 class AuthForm extends React.Component {
 
 
   
   handleSubmit = event => {
     event.preventDefault();
-    window.location.href='/';
+    let username = document.getElementById('username').value;
+    let password = document.getElementById('password').value;
+    if (username === 'kevin') {
+      if (md5(password) === 'e10adc3949ba59abbe56e057f20f883e'){
+        localStorage.setItem('login', 'true');
+        window.location.href='/';
+      }
+      else{
+        alert('Incorrect username or password')
+      }
+    }
+    else{
+      alert('Incorrect username or password')
+    }
   };
 
 
@@ -20,11 +35,11 @@ class AuthForm extends React.Component {
       <Form onSubmit={this.handleSubmit}>
         <FormGroup>
           <Label for="Username">Username</Label>
-          <Input type="text" />
+          <Input id="username" type="text" />
         </FormGroup>
         <FormGroup>
           <Label for="Password">Password</Label>
-          <Input type="password" />
+          <Input id="password" type="password" />
         </FormGroup>
 
         <hr />

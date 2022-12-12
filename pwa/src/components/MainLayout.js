@@ -16,6 +16,7 @@ import {
   MdBorderAll,
   MdDashboard,
   MdWeb,
+  MdSettingsApplications,
 } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 
@@ -33,7 +34,8 @@ const sidebarBackground = {
 const navItems = [
   { to: '/', name: 'dashboard', exact: true, Icon: MdDashboard },
   { to: '/users', name: 'users', exact: false, Icon: MdWeb },
-  { to: '/log', name: 'log', exact: false, Icon: MdBorderAll }
+  { to: '/log', name: 'log', exact: false, Icon: MdBorderAll },
+  { to: '/admin', name: 'admin', exact: false, Icon: MdSettingsApplications }
 ];
 
 class Sidebar extends React.Component {
@@ -47,6 +49,13 @@ class Sidebar extends React.Component {
       };
     });
   };
+  componentDidMount() {
+    if(localStorage.getItem('login') !== 'true'){
+      window.location.href = '/login'
+    }
+    
+  }
+
 
   render() {
     return (
@@ -118,7 +127,7 @@ class Header extends React.Component {
 
 
         <Nav navbar className="cr-header__nav-right">
-          <Button outline onClick={function(){window.location.href = '/login'}}>Logout
+          <Button outline onClick={function(){localStorage.setItem('login', 'false');window.location.href = '/login'}}>Logout
           </Button>
         </Nav>
       </Navbar>
