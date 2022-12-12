@@ -21,7 +21,7 @@ def hub(
 
     def openDoor(banner, static_var = {"schedualed_close_time": 0}):
         queue_cmd_to_motor.put({"type": 'OPEN'})
-        Timer(1.5, lambda :queue_cmd_to_motor.put({"type": 'STOP'})).start()
+        Timer(0.6, lambda :queue_cmd_to_motor.put({"type": 'STOP'})).start()
         queue_cmd_to_display.put({"type": 'WELCOME', "data": banner})
         static_var['schedualed_close_time'] = time() + 6
 
@@ -30,7 +30,7 @@ def hub(
             if time() > static_var['schedualed_close_time']:
                 queue_cmd_to_motor.put({"type": 'CLOSE'})
                 queue_cmd_to_display.put({"type": 'INIT'})
-                Timer(1.5, lambda :queue_cmd_to_motor.put({"type": 'STOP'})).start()
+                Timer(0.6, lambda :queue_cmd_to_motor.put({"type": 'STOP'})).start()
         
         Timer(7.0, closeDoor).start()
 
