@@ -31,6 +31,7 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
     # Flags
     FPS = 100
+
     # PiTFT Page states
     PAGE = Enum('page', ('DEFAULT', 'WELCOME', 'FAILURE', 'RECOGNITION', 'TRAIN'))
     print('display5')
@@ -57,7 +58,7 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
     button_finish = VButton(
         text = Text('FINISH'),
-        position = screen%(85, 50),
+        position = screen%(85, 80),
         size = (80, 40),
         enable = False
     )
@@ -75,6 +76,10 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
     banner = Text(text='', position = screen%(50,20))
     print('display2')
 
+    train_text_uid = Text(text='', position = screen%(85,10))
+    train_text_name = Text(text='', position=screen%(85, 30))
+    train_text_iter = Text(text='', position=screen%(85, 50))
+
 
     live_video = ImgBoard(
         position = screen%(35, 50),
@@ -91,6 +96,9 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
         banner.text = ''
         banner.refresh()
         banner.enable = False
+        train_text_iter.enable = False
+        train_text_name.enable = False
+        train_text_uid.enable = False
 
     def page_default():
         clear_screen()
@@ -123,12 +131,18 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
         banner.enable = True
         live_video.enable = True
 
-    def page_train():
+    def page_train(id, name):
         clear_screen()
         page = PAGE.TRAIN
         live_video.enable = True
         button_finish.enable = True
-
+        train_text_uid.text = 'uid: '+str(id)
+        train_text_uid.refresh()
+        train_text_name.text = str(name)
+        train_text_name.refresh()
+        train_text_iter.enable = True
+        train_text_name.enable = True
+        train_text_uid.enable = True
 
     try:
         print('display3')
@@ -138,16 +152,24 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
             # draw on the screen
             screen.clear()
-            screen << button_open
-            screen << button_request
-            screen << button_finish
-            screen << banner
+
 
             if 'png' in dict_live_photo:
                 img = imgc_base642bytesio(dict_live_photo['png'])
                 if img:
                     live_video.refresh(img = pygame.image.load(img))
                     screen << live_video
+                    train_text_iter.text = 'iter: '+str(dict_live_photo['iter'])
+                    train_text_iter.refresh()
+
+            screen << button_open
+            screen << button_request
+            screen << button_finish
+            screen << banner
+            screen << train_text_iter
+            screen << train_text_name
+            screen << train_text_uid
+
             pygame.display.flip()        # display workspace on screen
 
             if not queue_cmd_to_display.empty():
@@ -166,7 +188,7 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
                     banner.text = cmd['data']
                     banner.refresh()
                 if cmd['type'] == 'TRAIN':
-                    page_train()
+                    page_train(cmd['data'], cmd['name'])
 
             # touch event
             for event in pygame.event.get():    

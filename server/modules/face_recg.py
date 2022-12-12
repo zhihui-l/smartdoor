@@ -60,6 +60,7 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg,
                         "id": ID_TRAINING,
                         "face": faces[0]
                     })
+                    dict_live_photo['iter']+=1
 
 
     except KeyboardInterrupt:

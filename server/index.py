@@ -26,6 +26,7 @@ queue_cmd_to_hub = mp.Queue()
 dict_live_photo = (mp.Manager()).dict()
 dict_live_photo['png'] = ''
 dict_live_photo['good'] = ''
+dict_live_photo['iter'] = 0
 f = open('/var/EMAIL')
 data = f.read()
 dict_live_photo['email'] = data

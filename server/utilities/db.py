@@ -56,6 +56,11 @@ def addUserIteration(uid):
     db.commit()
     return id
 
+def getUserTrainInfo(uid):
+    global cursor, db
+    cursor.execute("SELECT name, iteration FROM user WHERE uid = %s " % str(uid))
+    return cursor.fetchall()
+
 
 def log(type, uid = "NULL", img = "NULL", data = "NULL"):
     global cursor, db

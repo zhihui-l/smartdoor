@@ -30,13 +30,16 @@ def detect_face(img_original):
 
 
 def recg_face(face):
-    return recognizer.predict(face)
+    
+    id, confidence_loss = recognizer.predict(face)
+    confidence = 100-confidence_loss if confidence_loss < 100 else 0
+    return id, confidence
 
 
 def label_face(img, face_position, id, confidence):
     cv2.putText(img, 
-        str(id) + ': ' + str(confidence) + '%' 
-    , (face_position[0],face_position[1]), cv2.FONT_HERSHEY_SIMPLEX, 4, (0,0,255), 10)
+        str(id) + ':' + str(confidence) + '%'
+    , (face_position[0],face_position[1]), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 10)
     return img
 
 def train_face(id, face):
