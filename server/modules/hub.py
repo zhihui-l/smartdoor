@@ -98,7 +98,7 @@ def hub(
                 cmd = queue_cmd_to_hub.get()
                 print('queue_cmd_to_hub: ', cmd)
                 if cmd['type'] == 'REMOTE_OPEN':
-                    openDoor('Opened by Admin remotely!!')
+                    openDoor('Welcome ~')
                     log('REMOTE_OPEN')
 
                 if cmd['type'] == 'TRAIN':

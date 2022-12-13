@@ -8,6 +8,8 @@ class ImgBoard(Entity):
     img = None
     position = [0,0]
     size = 25
+    h = 2
+    v = 2
     def __init__(self, position = [0,0], size = 25, speed = [0,0], enable = True):
         self.speed = np.array(speed)
         self.size = size
@@ -18,6 +20,6 @@ class ImgBoard(Entity):
     def refresh(self, img):
         if self.enable:
             self.img = img
-            self.surface = pygame.transform.scale(self.img, (self.size*2,self.size*2))
+            self.surface = pygame.transform.scale(self.img, (self.size*self.h,self.size*self.v))
             self.rect = self.surface.get_rect()
             self.rect.center = self.position
