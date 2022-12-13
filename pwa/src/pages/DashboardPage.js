@@ -27,10 +27,11 @@ class DashboardPage extends React.Component {
   componentDidMount() {
     // this is needed, because InfiniteCalendar forces window scroll
     window.scrollTo(0, 0);
+    /*
     this.timer = setInterval(()=>{
       this.setState({img: '/api/live?t='+new Date().valueOf()})
     }, 400)
-    
+    */
   }
 
   　　componentWillUnmount() {
