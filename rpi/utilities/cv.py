@@ -1,3 +1,6 @@
+"""
+self defined utilities for facial recog
+"""
 import cv2
 import numpy as np 
 import os
@@ -6,7 +9,6 @@ from PIL import Image
 
 face_cascade = cv2.CascadeClassifier(os.path.dirname(os.path.realpath(__file__)) + '/../lib/haarcascade_frontalface_default.xml')
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-print(os.path.dirname(os.path.realpath(__file__)) + '/../lib/haarcascade_frontalface_default.xml')
 MODEL_DIR = '/var/SMARTDOOR_MODEL.yml'
 
 HAVE_MODEL = False
@@ -47,7 +49,6 @@ def train_face(id, face):
     recognizer.update([face], np.array([id]))
     recognizer.save(MODEL_DIR)
     HAVE_MODEL = True
-    print('tt', id)
 
 def retrain_face(ids, faces):
     global HAVE_MODEL

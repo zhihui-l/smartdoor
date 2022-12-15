@@ -1,3 +1,7 @@
+/*
+Code defines the Web APP structure
+*/
+
 import MainLayout  from 'components/MainLayout';
 import React from 'react';
 import componentQueries from 'react-component-queries';
@@ -45,6 +49,7 @@ class App extends React.Component {
   }
 }
 
+// small screen optimization
 const query = ({ width }) => {
   if (width < 575) {
     return { breakpoint: 'xs' };

@@ -1,4 +1,6 @@
-
+"""
+Camera module
+"""
 import cv2
 from time import time, sleep
 

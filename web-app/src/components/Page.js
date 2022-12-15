@@ -1,3 +1,6 @@
+/*
+Page components
+*/
 import React from 'react';
 
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';

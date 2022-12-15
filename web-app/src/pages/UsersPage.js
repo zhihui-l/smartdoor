@@ -1,3 +1,6 @@
+/* 
+user management page
+*/
 import Page from 'components/Page';
 import React from 'react';
 import {

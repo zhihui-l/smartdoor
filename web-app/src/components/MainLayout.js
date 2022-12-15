@@ -1,3 +1,6 @@
+/* 
+layout for the admin, dashboard, log, and user pages
+*/
 import React from 'react';
 import {
   Button,

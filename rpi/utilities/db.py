@@ -1,3 +1,6 @@
+"""
+self defined utilities for database operation
+"""
 import mariadb
 import os
 import hashlib
@@ -8,10 +11,8 @@ import json
 
 DB_DIR = '/tmp/smartdoorDB'
 
-
 if not os.path.exists(DB_DIR):
     os.makedirs(DB_DIR)
-
 
 db = mariadb.connect(
   host="localhost",

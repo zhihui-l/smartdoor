@@ -1,3 +1,6 @@
+"""
+hub module
+"""
 from time import time
 from threading import Timer
 import os
@@ -7,6 +10,7 @@ import requests
 # add self modules path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../utilities')
 
+# import self defined utilities
 from db import log, getUser, addUserIteration, getUserTrainInfo
 
 def hub(
@@ -16,7 +20,7 @@ def hub(
     queue_cmd_to_motor,
     queue_cmd_from_face_recg,
     queue_cmd_to_face_recg,
-    dict_live_photo
+    global_shared_dict
     ):
 
     def openDoor(banner, static_var = {"schedualed_close_time": 0}):
@@ -26,7 +30,6 @@ def hub(
         static_var['schedualed_close_time'] = time() + 6
 
         def closeDoor():
-            print('sssss')
             if time() > static_var['schedualed_close_time']:
                 queue_cmd_to_motor.put({"type": 'CLOSE'})
                 queue_cmd_to_display.put({"type": 'INIT'})
@@ -46,13 +49,13 @@ def hub(
 
     def train(id):
         userInfo = getUserTrainInfo(id)
-        dict_live_photo['iter'] = int(userInfo[0][1])
+        global_shared_dict['iter'] = int(userInfo[0][1])
         queue_cmd_to_display.put({"type": 'TRAIN', "data": id, "name": userInfo[0][0]})
         queue_cmd_to_face_recg.put({"type": 'TRAIN LIVE', "data": id})
         cmd = queue_cmd_from_display.get()
         queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
         if cmd['type'] == 'TRAIN FINISH':
-            log('TRAIN', uid = id, img = dict_live_photo['good'])
+            log('TRAIN', uid = id, img = global_shared_dict['good'])
         
 
     def recg():
@@ -67,19 +70,19 @@ def hub(
                         if len(user) == 1:
                             queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
                             openDoor('Welcome %s ~~' % user[0][0])
-                            log('RECG_SUCCESS', uid = cmd['id'], img = dict_live_photo['good'])
+                            log('RECG_SUCCESS', uid = cmd['id'], img = global_shared_dict['good'])
                             return None
 
 
         queue_cmd_to_face_recg.put({"type": 'CHANGE STATE', "data": 'IDLE'})
         recgFail('Cannot recg you!!')
-        log('RECG_FAILURE', img = dict_live_photo['png'])
+        log('RECG_FAILURE', img = global_shared_dict['live_video_frame'])
 
 
     def request():
-        requests.get(url = 'https://api.yimian.xyz/mail/?subject=Access_Control_Request&body=Log_on_web_dashboard_to_decide!!&from=access_control&to='+dict_live_photo['email'])
-        requests.get(url = 'https://api.yimian.xyz/mail/?subject=Access_Control_Request&body=Log_on_web_dashboard_to_decide!!&from=access_control&to='+dict_live_photo['sms']+'@vzwpix.com')
-        log('REQUEST', img = dict_live_photo['png'])
+        requests.get(url = 'https://api.yimian.xyz/mail/?subject=Access_Control_Request&body=Log_on_web_dashboard_to_decide!!&from=access_control&to='+global_shared_dict['email'])
+        requests.get(url = 'https://api.yimian.xyz/mail/?subject=Access_Control_Request&body=Log_on_web_dashboard_to_decide!!&from=access_control&to='+global_shared_dict['sms']+'@vzwpix.com')
+        log('REQUEST', img = global_shared_dict['live_video_frame'])
 
     """init"""
     queue_cmd_to_display.put({

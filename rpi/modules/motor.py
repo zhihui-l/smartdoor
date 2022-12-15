@@ -1,11 +1,12 @@
+"""
+motor module
+"""
 import RPi.GPIO as GPIO
 import time as time
 
 def motor(queue_cmd_to_motor):
- 
 
     PIN = 13
-
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(PIN, GPIO.OUT)

@@ -1,4 +1,6 @@
-
+"""
+display module
+"""
 # import system modules
 import os
 import sys
@@ -6,7 +8,6 @@ import sys
 # add self modules path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../utilities/display')
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../assets')
-
 
 # import other modules
 from enum import Enum
@@ -22,21 +23,19 @@ from text import Text
 from vbutton import VButton
 from imgBoard import ImgBoard
 
-def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
-    print('display')
+def display(queue_cmd_from_display, queue_cmd_to_display, global_shared_dict):
     # set env var
     os.putenv('SDL_VIDEODRIVER', 'fbcon')
     os.putenv('SDL_FBDEV', '/dev/fb0')
     os.putenv('SDL_MOUSEDRV', 'TSLIB')
     os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
-
     # Flags
     FPS = 100
 
     # PiTFT Page states
     PAGE = Enum('page', ('DEFAULT', 'WELCOME', 'FAILURE', 'RECOGNITION', 'TRAIN'))
-    print('display5')
+
     # set page flag to default 
     page = PAGE.DEFAULT
 
@@ -46,10 +45,10 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
     pygame.mouse.set_visible(False)
     # clock obj to control FPS
     clock = pygame.time.Clock()
-    print('display6')
+
     # create a screen
     screen = Screen(width = 320, height = 240, background = (0, 0, 0))
-    print('display8')
+
     # create a open button on screen
     button_open = VButton(
         text = Text('OPEN'),
@@ -65,7 +64,6 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
         enable = False
     )
 
-    print('display9')
 
     button_request = VButton(
         text = Text('Request'),
@@ -73,10 +71,9 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
         size = (80, 40),
         enable = False
     )
-    print('display7')
+
     # banner text
     banner = Text(text='', position = screen%(50,40))
-    print('display2')
 
     train_text_uid = Text(text='', position = screen%(85,17))
     train_text_name = Text(text='', position=screen%(85, 37))
@@ -93,6 +90,7 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
     icon_lock = ImgBoard(enable = False)
 
+    # define pages
     def clear_screen():
         button_open.enable = False
         button_request.enable = False
@@ -172,7 +170,6 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
         train_text_uid.enable = True
 
     try:
-        print('display3')
         while True:
 
             clock.tick(FPS) 
@@ -182,12 +179,12 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
             screen << text_date
 
-            if 'png' in dict_live_photo:
-                img = imgc_base642bytesio(dict_live_photo['png'])
+            if 'live_video_frame' in global_shared_dict:
+                img = imgc_base642bytesio(global_shared_dict['live_video_frame'])
                 if img:
                     live_video.refresh(img = pygame.image.load(img))
                     screen << live_video
-                    train_text_iter.text = 'iter: '+str(dict_live_photo['iter'])
+                    train_text_iter.text = 'iter: '+str(global_shared_dict['iter'])
                     train_text_iter.refresh()
 
             screen << button_open
@@ -206,7 +203,6 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
             text_date.refresh()
 
             if not queue_cmd_to_display.empty():
-                print('in10')
                 cmd = queue_cmd_to_display.get()
                 print(cmd)
                 if cmd['type'] == 'WELCOME':
@@ -225,13 +221,11 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
             # touch event
             for event in pygame.event.get():    
-                print('in2')    
                 if(event.type is MOUSEBUTTONUP):            
                     pos = pygame.mouse.get_pos() 
                     # when open button is pressed
                     if (button_open.collidepoint(pos) ):
                         page_recognition()
-                        print('in')
                         queue_cmd_from_display.put({
                             "type": 'START RECOG'
                         })
@@ -257,5 +251,4 @@ def display(queue_cmd_from_display, queue_cmd_to_display, dict_live_photo):
 
 
     except KeyboardInterrupt:
-        print('qqqqqqqqqqqqqqqqqqqqq')
         pygame.quit()

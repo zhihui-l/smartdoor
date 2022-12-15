@@ -1,3 +1,6 @@
+/*
+page for login
+*/
 import React from 'react';
 import { Card, Col, Row, Button, Form, FormGroup, Input, Label, Container } from 'reactstrap';
 

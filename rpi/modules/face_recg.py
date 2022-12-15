@@ -1,23 +1,23 @@
-
+"""
+face_recg module
+"""
 import os, io
 import sys
 import numpy as np
 
 from PIL import Image
 
-from imgConvert import *
-
 # add self modules path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../utilities')
 
+# import self defined utilities
+from imgConvert import *
 from cv import detect_face, recg_face, label_face, train_face, retrain_face
 
-
-
-def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg, queue_photo_from_camera):
+def face_recg(global_shared_dict, queue_cmd_from_face_recg, queue_cmd_to_face_recg, queue_photo_from_camera):
 
     STATE = 'IDLE' # IDLE, RECG, TRAIN
-    ID_TRAINING = 8
+    ID_TRAINING = 0
 
     try:
 
@@ -39,7 +39,7 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg,
                 id, confidence = recg_face(faces[0])
                 img = label_face(img, faces_position[0], id, int(confidence))
 
-            dict_live_photo['png'] = imgc_cv2base64(img)
+            global_shared_dict['live_video_frame'] = imgc_cv2base64(img)
             
 
             if HAVE_MODEL and len(faces) == 1:
@@ -52,7 +52,7 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg,
                     })
 
             if len(faces) == 1:
-                dict_live_photo['good'] =dict_live_photo['png']
+                global_shared_dict['good'] =global_shared_dict['live_video_frame']
                 if STATE == 'TRAIN':
                     train_face(ID_TRAINING, faces[0])
                     queue_cmd_from_face_recg.put({
@@ -60,7 +60,7 @@ def face_recg(dict_live_photo, queue_cmd_from_face_recg, queue_cmd_to_face_recg,
                         "id": ID_TRAINING,
                         "face": faces[0]
                     })
-                    dict_live_photo['iter']+=1
+                    global_shared_dict['iter']+=1
 
 
     except KeyboardInterrupt:

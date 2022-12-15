@@ -1,10 +1,11 @@
-
+"""
+self defined image convertion utilities 
+"""
 from PIL import Image
 import io
 import base64
 import numpy as np
 import cv2
-
 
 def imgc_pil2cv(pil_img):
     return cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
@@ -27,7 +28,6 @@ def imgc_base642pil(base64_str):
         img = Image.open(io.BytesIO(base64.decodebytes(bytes(base64_str, "utf-8"))))
     except:
         img = Image.new('RGB', (800, 800), (255,255,255))
-
     return img
 
 

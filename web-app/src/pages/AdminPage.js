@@ -1,3 +1,6 @@
+/*
+page for setting admin email and SMS
+*/
 import React, { useEffect, useState } from 'react';
 import { FaWindows } from 'react-icons/fa';
 import { Card, Col, Row, Button, Form, FormGroup, Input, Label, Container } from 'reactstrap';
