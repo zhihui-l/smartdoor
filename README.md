@@ -1,2 +1,2 @@
 # smartdoor
-An access control system based on Raspberry Pi.
+An access control system including a full-stack visiting management website based on Raspberry Pi
